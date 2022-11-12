@@ -3,6 +3,8 @@
 require 'dbconfig/config.php';
  ?>
 
+// this was working on my local pc with Xampp and php my admin but I've also gotten databases and config files to work with the www.justnormalworkingstudents.com
+
 <!DOCTYPE html>
 <html>
 <head>
