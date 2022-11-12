@@ -1,0 +1,153 @@
+<?php
+require 'database/config.php';
+
+if(!isset($_GET["code"])) {
+	exit("Can not find page1");
+}
+
+$code = $_GET["code"];  //code was retrieved successfully (checked it)
+
+$getEmailQuery = mysqli_query($conn, "SELECT email_reset FROM resetPasswords WHERE code = '$code'");  //checked and this sql code works
+if(mysqli_num_rows($getEmailQuery) == 0) {
+	exit("Can not find page2");   //this error not thrown since 5/27/22 morning
+}
+
+if(isset($_POST["password"])) {
+	$pw = $_POST["password"];   //checked and pw was successfully set
+    $encrypted_pw = md5($pw);
+
+	$row = mysqli_fetch_array($getEmailQuery);
+	$email = $row["email_reset"];
+	//echo $email; $email is retrieved correctly I checked
+
+	$query = "UPDATE users SET password = '$encrypted_pw' where username = '$email'";
+	$query_run = mysqli_query($conn, $query);
+
+	if($query_run)
+	{
+	  $query = mysqli_query($conn, "DELETE FROM resetPasswords WHERE code='$code'");
+	  exit("Password updated, Please login with new password");
+
+	}
+	else
+		{
+		exit("Password not updated");
+    }
+}
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<title>Relink</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous"/>
+        
+        
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous"/>
+
+<!--<link href=“style.css” rel="stylesheet" >-->
+<style>
+body{
+    background: linear-gradient(to top, #f5f5f5, #d8d6f4, #b4b9f4, #889ef4, #4285f4);
+	  background-repeat: no-repeat;
+     background-size: 100% 30%;
+
+	 background-color: whitesmoke;
+}
+
+.avatar{
+	width: 400px;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 8px;
+}
+
+#main-wrapper{
+	border-radius : 10px;
+	background-color:  white;
+	border:  1px solid #2c3e50;
+	width: 500px;
+	margin-top:  50px;
+    margin-left: auto;
+	margin-right: auto;
+	padding: 5px;
+}
+
+.myform{
+	width: 450px;
+	margin:0 auto;
+	padding-bottom: 10px;
+}
+
+.inputvalues{
+	width:100%;
+	margin: 0 auto;
+	padding: 5px;
+}
+
+#login_btn{
+	margin-top: 10px;
+	background-color:#4285f4;
+	padding: 5px;
+	color: white;
+	width: 100%;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+label{
+margin-top: 6px;
+margin-bottom: 2px;
+}
+</style>
+
+<body>
+    
+    <div id="main-wrapper">
+
+	    <center>
+	        <a class="avatar" href="index.php" style="display: flex; align-items: center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="83" height="64" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
+                        <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/>
+                    </svg>
+                    <span style="color: black; font-size:35px; text-align: center; padding-left: 3%;">SimpleChartsRI</span>
+            </a>
+            	<center>
+	    <h2>Change Password</h2>
+		</center>
+	</center>
+	
+	<form class="myform" action="" method="POST">
+	    <label><b>New Password</b></label>
+	    <br>
+	<input type="password" class="inputvalues" name="password" placeholder="New Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[!@#$%^&*+`~'=?\|\]\[\(\)\-<>/]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, one special character ~`!@#$%^*()_=+[]{}:.,\|/?&;- and at least 8 or more characters" required>
+	    <br>
+	    <input type="submit" name="submit" id="login_btn" value="Submit">
+	    <br>
+	</form>
+	</div>
+	
+<!--    
+<form method="POST">
+    <h5>Password must contain at least one number, one uppercase and lowercase letter, one special character and be of at least 8 or more characters in length</h5>
+	<input type="password" name="password" placeholder="New Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[!@#$%^&*+`~'=?\|\]\[\(\)\-<>/]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, one special character ~`!@#$%^*()_=+[]{}:.,\|/?&;- and at least 8 or more characters" required>
+	<br>
+	<input type="submit" name="submit" value="Update password">
+</form>
+-->
+
+</body>
+</html>
