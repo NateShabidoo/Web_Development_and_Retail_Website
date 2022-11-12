@@ -1,0 +1,6 @@
+<?php
+/*For My LocalPC*/
+// this is using Xampp to run the database, I've gotten config to work on www.justnormalworkingstudents.com with our software engineering team project
+$con = mysqli_connect("localhost","root","") OR die("cannot connect3");
+mysqli_select_db($con, 'fitness_tracker');
+?>
