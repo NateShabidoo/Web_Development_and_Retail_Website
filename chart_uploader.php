@@ -34,9 +34,6 @@ $query2 = "INSERT into add_chart (chart_id, saved_charts_id, usersid) values ('$
 				
 $ifp = fopen($location, 'wb' ); 
 
-    // split the string on commas
-    // $data[ 0 ] == "data:image/png;base64"
-    // $data[ 1 ] == <actual base64 string>
     $data = explode( ',', $filename );
 
     // we could add validation here with ensuring count( $data ) > 1
