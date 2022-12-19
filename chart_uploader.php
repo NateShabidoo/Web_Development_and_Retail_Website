@@ -21,7 +21,6 @@ print_r($_POST);
 echo('</xmp>');
 
 /* choose where to save the uploaded file */
-//$chartname = uniqid(true).".png";
 $chartpath = "saved_charts/".uniqid(true).".png";
 
 $location = $chartpath;
