@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 require 'database/config.php';
 ob_start();
